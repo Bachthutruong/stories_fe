@@ -13,11 +13,12 @@ import { useToast } from '../hooks/use-toast';
 interface Comment {
   _id: string;
   content: string;
-  userId: {
+  userId?: {
     name: string;
     phoneNumber: string;
     email?: string;
   };
+  userName?: string; // For guest comments
   createdAt: string;
 }
 
@@ -77,43 +78,49 @@ const CommentList: React.FC<CommentListProps> = ({ postId }) => {
 
   return (
     <div className="space-y-4 py-4">
-      {comments.map((comment) => (
-        <div key={comment._id} className="flex space-x-3">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={`https://placehold.co/40x40.png?text=${comment.userId.name.charAt(0)}`} />
-            <AvatarFallback>
-              <UserCircle className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 bg-muted/50 p-3 rounded-lg">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-foreground">
-                {comment.userId.name}
-              </p>
-              <div className="flex items-center space-x-2">
-                <p className="text-xs text-muted-foreground">
-                  {formatDate(comment.createdAt, 'MMM d, yyyy h:mm a')}
+      {comments.map((comment) => {
+        // Get the display name - either from userId.name or userName
+        const displayName = comment.userId?.name || comment.userName || 'Anonymous';
+        const firstLetter = displayName.charAt(0).toUpperCase();
+        
+        return (
+          <div key={comment._id} className="flex space-x-3">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={`https://placehold.co/40x40.png?text=${firstLetter}`} />
+              <AvatarFallback>
+                <UserCircle className="h-5 w-5" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 bg-muted/50 p-3 rounded-lg">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-foreground">
+                  {displayName}
                 </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleReportComment(comment._id)}
-                  className="h-6 w-6 p-0 text-muted-foreground hover:text-red-500"
-                >
-                  <Flag className="h-3 w-3" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <p className="text-xs text-muted-foreground">
+                    {formatDate(comment.createdAt, 'MMM d, yyyy h:mm a')}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleReportComment(comment._id)}
+                    className="h-6 w-6 p-0 text-muted-foreground hover:text-red-500"
+                  >
+                    <Flag className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-1">
+                <SensitiveTextDisplay 
+                  text={comment.content}
+                  className="text-sm text-foreground"
+                  showViolationBadge={false}
+                />
               </div>
             </div>
-            <div className="mt-1">
-              <SensitiveTextDisplay 
-                text={comment.content}
-                className="text-sm text-foreground"
-                showViolationBadge={false}
-              />
-            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {reportDialogOpen && (
         <ReportDialog

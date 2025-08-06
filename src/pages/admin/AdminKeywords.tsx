@@ -132,24 +132,42 @@ export default function AdminKeywords() {
 
   const getActionBadge = (action: string) => {
     const actionConfig = {
-      highlight: { variant: 'default' as const, text: '標記', color: 'text-blue-600' },
-      block: { variant: 'destructive' as const, text: '阻擋', color: 'text-red-600' },
-      warn: { variant: 'outline' as const, text: '警告', color: 'text-yellow-600' },
+      highlight: { 
+        className: 'bg-blue-500 text-white hover:bg-blue-600', 
+        text: '標記' 
+      },
+      block: { 
+        className: 'bg-red-500 text-white hover:bg-red-600', 
+        text: '阻擋' 
+      },
+      warn: { 
+        className: 'bg-yellow-500 text-white hover:bg-yellow-600', 
+        text: '警告' 
+      },
     };
     
     const config = actionConfig[action as keyof typeof actionConfig] || actionConfig.highlight;
-    return <Badge variant={config.variant} className={config.color}>{config.text}</Badge>;
+    return <Badge className={config.className}>{config.text}</Badge>;
   };
 
   const getSeverityBadge = (severity: string) => {
     const severityConfig = {
-      low: { variant: 'secondary' as const, text: '低', color: 'text-green-600' },
-      medium: { variant: 'outline' as const, text: '中', color: 'text-yellow-600' },
-      high: { variant: 'destructive' as const, text: '高', color: 'text-red-600' },
+      low: { 
+        className: 'bg-green-500 text-white hover:bg-green-600', 
+        text: '低' 
+      },
+      medium: { 
+        className: 'bg-orange-500 text-white hover:bg-orange-600', 
+        text: '中' 
+      },
+      high: { 
+        className: 'bg-red-500 text-white hover:bg-red-600', 
+        text: '高' 
+      },
     };
     
     const config = severityConfig[severity as keyof typeof severityConfig] || severityConfig.low;
-    return <Badge variant={config.variant} className={config.color}>{config.text}</Badge>;
+    return <Badge className={config.className}>{config.text}</Badge>;
   };
 
   const columns = [

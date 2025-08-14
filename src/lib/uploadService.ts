@@ -17,20 +17,29 @@ export interface UploadResponse {
 class UploadService {
   private baseURL = 'https://stories-be.onrender.com/api/upload';
 
-  private async makeRequest(endpoint: string, options: RequestInit): Promise<UploadResponse> {
+  private async makeRequest(endpoint: string, options: RequestInit, requireAuth: boolean = true): Promise<UploadResponse> {
     // Get token from localStorage as fallback, but this should be passed from components
     const token = localStorage.getItem('hem-story-token');
     
-    if (!token) {
-      throw new Error('No authentication token available');
+    const headers: Record<string, string> = {};
+    
+    // Copy existing headers if they exist
+    if (options.headers) {
+      if (typeof options.headers === 'object' && !Array.isArray(options.headers)) {
+        Object.assign(headers, options.headers);
+      }
+    }
+    
+    if (requireAuth) {
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      headers['Authorization'] = `Bearer ${token}`;
     }
     
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       ...options,
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        ...options.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -42,14 +51,15 @@ class UploadService {
   }
 
   // Upload single image
-  async uploadImage(file: File): Promise<UploadedImage> {
+  async uploadImage(file: File, requireAuth: boolean = true): Promise<UploadedImage> {
     const formData = new FormData();
     formData.append('image', file);
 
-    const response = await this.makeRequest('/image', {
+    const endpoint = requireAuth ? '/image' : '/guest/image';
+    const response = await this.makeRequest(endpoint, {
       method: 'POST',
       body: formData,
-    });
+    }, requireAuth);
 
     if (!response.success || !response.image) {
       throw new Error(response.message || 'Upload failed');
@@ -59,16 +69,17 @@ class UploadService {
   }
 
   // Upload multiple images
-  async uploadImages(files: File[]): Promise<UploadedImage[]> {
+  async uploadImages(files: File[], requireAuth: boolean = true): Promise<UploadedImage[]> {
     const formData = new FormData();
     files.forEach((file, _index) => {
       formData.append('images', file);
     });
 
-    const response = await this.makeRequest('/images', {
+    const endpoint = requireAuth ? '/images' : '/guest/images';
+    const response = await this.makeRequest(endpoint, {
       method: 'POST',
       body: formData,
-    });
+    }, requireAuth);
 
     if (!response.success || !response.images) {
       throw new Error(response.message || 'Upload failed');
@@ -90,6 +101,18 @@ class UploadService {
       const response = await this.makeRequest('/status', {
         method: 'GET',
       });
+      return response.success;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Check guest upload service status
+  async checkGuestStatus(): Promise<boolean> {
+    try {
+      const response = await this.makeRequest('/guest/status', {
+        method: 'GET',
+      }, false);
       return response.success;
     } catch (error) {
       return false;

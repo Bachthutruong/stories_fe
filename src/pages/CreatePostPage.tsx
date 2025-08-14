@@ -75,8 +75,11 @@ export default function CreatePostPage() {
         description: "正在上傳圖片到伺服器..." 
       });
 
-      // Upload images through backend
-      const uploadedImages = await uploadService.uploadImages(files);
+      // Check if user is authenticated
+      const isAuthenticated = !!user?.token || !!localStorage.getItem('hem-story-token');
+      
+      // Upload images through backend (use guest upload if not authenticated)
+      const uploadedImages = await uploadService.uploadImages(files, isAuthenticated);
       
       toast({ 
         title: "圖片上傳成功", 

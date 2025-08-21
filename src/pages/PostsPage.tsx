@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
+import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 import { LikeButton } from '../components/LikeButton';
@@ -137,7 +138,7 @@ export default function PostsPage() {
   };
 
   const renderPostCard = (post: Post) => {
-    const luckyNumber = post.postId ? parseInt(post.postId.split('_').pop() || '0') : 0;
+            const luckyNumber = post.postId ? generatePostLuckyNumber(post.postId) : '000';
     
     return (
       <Link key={post._id} to={`/posts/${post._id}`} className="block">
@@ -152,9 +153,9 @@ export default function PostsPage() {
                   {post.description}
                 </CardDescription>
               </div>
-              <div className="ml-2 text-xs sm:text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                {luckyNumber}
-              </div>
+                                          <div className="ml-2 text-xs sm:text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                                {luckyNumber}
+                            </div>
             </div>
           </CardHeader>
           

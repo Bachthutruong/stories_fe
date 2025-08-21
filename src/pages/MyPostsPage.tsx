@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
@@ -138,7 +139,7 @@ export default function MyPostsPage() {
   };
 
   const renderPostCard = (post: Post) => {
-    const luckyNumber = post.postId ? parseInt(post.postId.split('_').pop() || '0') : 0;
+            const luckyNumber = post.postId ? generatePostLuckyNumber(post.postId) : '000';
     
     return (
       <Card key={post._id} className="w-full max-w-sm shadow-lg border-none hover:shadow-xl transition-shadow duration-300 h-full flex flex-col relative">
@@ -165,9 +166,9 @@ export default function MyPostsPage() {
                 {post.description}
               </CardDescription>
             </div>
-            <div className="ml-2 text-xs sm:text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-              {luckyNumber}
-            </div>
+                                        <div className="ml-2 text-xs sm:text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                                {luckyNumber}
+                            </div>
           </div>
         </CardHeader>
         

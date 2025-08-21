@@ -11,6 +11,8 @@ import { useAuth } from '../components/providers/AuthProvider';
 import { useToast } from '../hooks/use-toast';
 import { SensitiveTextDisplay } from '../components/SensitiveTextDisplay';
 import ReportDialog from '../components/ReportDialog';
+import { ImageCarousel } from '../components/ImageCarousel';
+import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
 import { useState } from 'react';
 
 interface Post {
@@ -117,11 +119,7 @@ export default function PostDetailPage() {
               <CardTitle className="text-lg sm:text-2xl text-foreground m-0 p-0 truncate">{post.title}</CardTitle>
             </div>
             <span className="ml-2 sm:ml-4 bg-blue-700 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-bold flex-shrink-0">
-              {(() => {
-                if (!postId) return '000';
-                const match = postId.match(/(\d{3})$/);
-                return match ? match[1] : postId.slice(-3).padStart(3, '0');
-              })()}
+              {postId ? generatePostLuckyNumber(postId) : '000'}
             </span>
           </div>
           <CardDescription className="text-sm sm:text-base mt-1">
@@ -131,24 +129,11 @@ export default function PostDetailPage() {
         <CardContent className="p-4 sm:p-6">
           {post.images && post.images.length > 0 && (
             <div className="mb-4 sm:mb-6">
-              {post.images.length === 1 ? (
-                <img
-                  src={post.images[0].url}
-                  alt={description}
-                  className="w-full max-h-64 sm:max-h-96 object-cover rounded-md"
-                />
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {post.images.map((image, index) => (
-                    <img
-                      key={image.public_id}
-                      src={image.url}
-                      alt={`${description} - Image ${index + 1}`}
-                      className="w-full h-48 sm:h-64 object-cover rounded-md"
-                    />
-                  ))}
-                </div>
-              )}
+              <ImageCarousel 
+                images={post.images}
+                alt={description}
+                className="w-full"
+              />
             </div>
           )}
           

@@ -10,7 +10,7 @@ import { LikeButton } from '../components/LikeButton';
 import { ShareButton } from '../components/ui/share-button';
 import { useAuth } from '../components/providers/AuthProvider';
 import { useToast } from '../hooks/use-toast';
-// import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
+import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
 
 interface Post {
     _id: string;
@@ -121,7 +121,7 @@ const HomePageContent = () => {
     };
 
     const renderPostCard = (post: Post) => {
-        const luckyNumber = post.postId ? parseInt(post.postId.split('_').pop() || '0') : 0;
+        const luckyNumber = post.postId ? generatePostLuckyNumber(post.postId) : '000';
         
         return (
             <Link key={post._id} to={`/posts/${post._id}`} className="block">

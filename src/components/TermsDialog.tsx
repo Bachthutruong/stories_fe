@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
@@ -66,38 +66,63 @@ const TermsDialog: React.FC<TermsDialogProps> = ({ isOpen, onOpenChange, onAgree
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{settings?.termsAndConditions?.title || 'Terms and Conditions'}</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="text-lg md:text-xl">
+            {settings?.termsAndConditions?.title || 'Terms and Conditions'}
+          </DialogTitle>
+          <DialogDescription className="text-sm">
             Before submitting your post, please read and agree to our terms and conditions.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 text-sm">
-          <div className="whitespace-pre-wrap text-muted-foreground">
+        
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto space-y-4 text-sm min-h-0">
+          <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
             {settings?.termsAndConditions?.content || 'Loading terms and conditions...'}
           </div>
-          
-          {/* Confirmation Checkbox */}
-          <div className="flex items-center space-x-2 pt-4">
+        </div>
+        
+        {/* Fixed bottom section with checkbox and buttons */}
+        <div className="flex-shrink-0 space-y-4 pt-4 border-t">
+          {/* Enhanced Confirmation Checkbox */}
+          <div className="flex items-start space-x-3 p-4 bg-muted/50 rounded-lg border border-muted">
             <Checkbox
               id="terms-confirm"
               checked={isConfirmed}
               onCheckedChange={(checked) => setIsConfirmed(checked as boolean)}
+              className="mt-0.5"
             />
-            <Label htmlFor="terms-confirm" className="text-sm text-gray-700">
+            <Label 
+              htmlFor="terms-confirm" 
+              className="text-sm text-foreground leading-relaxed cursor-pointer flex-1 select-none"
+            >
               I confirm that I have read and agree to the terms and conditions
             </Label>
           </div>
+          
+          {/* Enhanced Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button 
+              variant="outline" 
+              onClick={() => handleOpenChange(false)}
+              className="flex-1 h-12 text-base font-medium"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAgree} 
+              disabled={!isConfirmed}
+              className={`flex-1 h-12 text-base font-medium transition-all duration-200 ${
+                isConfirmed 
+                  ? 'bg-primary hover:bg-primary/90 shadow-lg' 
+                  : 'bg-muted text-muted-foreground cursor-not-allowed'
+              }`}
+            >
+              {isConfirmed ? 'I Agree' : 'Please confirm terms'}
+            </Button>
+          </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => handleOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleAgree} disabled={!isConfirmed}>
-            I Agree
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

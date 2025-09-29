@@ -11,6 +11,7 @@ import { ShareButton } from '../components/ui/share-button';
 import { useAuth } from '../components/providers/AuthProvider';
 import { useToast } from '../hooks/use-toast';
 import { generatePostLuckyNumber } from '../hooks/useLuckyNumber';
+import HomeBanner from '../components/HomeBanner';
 
 interface Post {
     _id: string;
@@ -205,10 +206,14 @@ const HomePageContent = () => {
 
     return (
         <div className="container mx-auto px-4 py-6 sm:py-8">
+            <HomeBanner />
+            
             <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">歡迎來到希望夢想牆</h1>
 
             <section className="mb-8 sm:mb-12">
-                <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">精選夢想卡</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">故事的角落                </h2>
+                <h5 className="text-xl sm:text-2xl font-semibold mb-4 text-center">有故事的地方，夢想就不孤單</h5>
+
                 {isLoading ? (
                     renderSkeletonGrid()
                 ) : (
@@ -262,9 +267,10 @@ export default function HomePage() {
     return (
         <Suspense fallback={
             <div className="container mx-auto px-4 py-6 sm:py-8">
+                <HomeBanner />
                 <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">歡迎來到希望夢想牆</h1>
                 <section className="mb-8 sm:mb-12">
-                    <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">精選夢想卡</h2>
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">讓我的夢想上牆                    </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 justify-items-center auto-rows-fr">
                         {Array.from({ length: 6 }).map((_, index) => (
                             <PostCardSkeleton key={index} />

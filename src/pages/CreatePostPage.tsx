@@ -8,6 +8,7 @@ import { Textarea } from "../components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../components/ui/form";
 import ImageUploadPlaceholder from '../components/ImageUploadPlaceholder';
 import TermsDialog from '../components/TermsDialog';
+import CreatePostBanner from '../components/CreatePostBanner';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/providers/AuthProvider';
@@ -195,6 +196,8 @@ export default function CreatePostPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-2xl">
+      <CreatePostBanner />
+      
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-4">分享您的夢想</h1>
         <p className="text-muted-foreground">
@@ -207,9 +210,11 @@ export default function CreatePostPage() {
           {/* Image Upload Section */}
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold mb-2">上傳圖片</h3>
+              <h3 className="text-lg font-semibold mb-2">夢想的照片（可上傳多張）</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                選擇1-5張圖片來展示您的夢想
+              可以是一張手寫的小卡、店內某個角落的回憶、享用甜湯的時光，或是你想與卡友分享的溫暖畫面。
+<span className="font-bold text-[#2596be]">讓夢想，不只是文字，也有屬於它的影像。</span>
+
               </p>
             </div>
             <ImageUploadPlaceholder
@@ -224,10 +229,10 @@ export default function CreatePostPage() {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>夢想標題</FormLabel>
+                <FormLabel>夢想的名字</FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder="為您的夢想起一個標題..." 
+                    placeholder="夢想卡的名字就像一個小標籤，可以是目標、心願，或是一句你最想記住的話" 
                     {...field} 
                   />
                 </FormControl>
@@ -242,10 +247,11 @@ export default function CreatePostPage() {
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>夢想描述</FormLabel>
+                <FormLabel>夢想的心聲</FormLabel>
                 <FormControl>
                   <Textarea 
-                    placeholder="詳細描述您的夢想，包括您的願望、目標和為什麼這個夢想對您很重要..."
+                    placeholder="寫下心裡的故事，請留下你的一段夢想、回憶或期待的故事。
+它不需要很長，因為最真誠的文字，總能打動人心..."
                     className="min-h-[120px]"
                     {...field} 
                   />
@@ -257,9 +263,11 @@ export default function CreatePostPage() {
 
           {/* Contact Information Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">聯絡資訊</h3>
+            <h3 className="text-lg font-semibold">讓希望找到你            </h3>
             <p className="text-sm text-muted-foreground">
-              請提供您的聯絡資訊，以便我們在您中獎時聯繫您
+            我們需要一點小小資訊，好在幸運降臨時，第一時間能找到你
+<span className="font-bold text-[#2596be]">你的資訊只會用於通知中獎，不會公開或做其他用途，請安心留下</span>
+
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -268,10 +276,10 @@ export default function CreatePostPage() {
                 name="contactName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>姓名</FormLabel>
+                    <FormLabel>你的名字，或一個暱稱                    </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="您的姓名" 
+                        placeholder="因為有名字，夢想才更像一份被珍藏的心意" 
                         {...field} 
                       />
                     </FormControl>
@@ -285,10 +293,10 @@ export default function CreatePostPage() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>電話號碼</FormLabel>
+                    <FormLabel>聯繫你的電話號碼</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="您的電話號碼" 
+                        placeholder="只在你的夢想卡被抽中時，第一時間打給你分享喜訊" 
                         {...field} 
                       />
                     </FormControl>
@@ -303,11 +311,11 @@ export default function CreatePostPage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>電子郵件</FormLabel>
+                  <FormLabel>寄送希望的信箱                  </FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
-                      placeholder="您的電子郵件地址" 
+                      placeholder="用來寄送中獎通知，或保存一份夢想卡紀錄，留給你收藏" 
                       {...field} 
                     />
                   </FormControl>

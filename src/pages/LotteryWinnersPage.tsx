@@ -6,6 +6,7 @@ import { Trophy, Calendar, Gift, Users, Star, Award, RefreshCw, Plus, Clock, Pla
 import { formatDate } from '../lib/utils';
 import { useToast } from '../hooks/use-toast';
 import { Link } from 'react-router-dom';
+import LotteryWinnersBanner from '../components/LotteryWinnersBanner';
 
 interface LotteryWinner {
   _id: string;
@@ -68,6 +69,18 @@ export default function LotteryWinnersPage() {
     },
   });
 
+  const { data: allPosts, isLoading: allPostsLoading } = useQuery({
+    queryKey: ['all-posts'],
+    queryFn: async () => {
+      const res = await fetch('https://stories-be.onrender.com/api/posts');
+      if (!res.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      return res.json();
+    },
+  });
+
+
   const createTestDataMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch('https://stories-be.onrender.com/api/home/lottery/test-data', {
@@ -95,7 +108,7 @@ export default function LotteryWinnersPage() {
     },
   });
 
-  if (winnersLoading || currentLotteriesLoading) {
+  if (winnersLoading || currentLotteriesLoading || allPostsLoading) {
     return (
       <div className="container mx-auto px-4 py-6 sm:py-8">
         <div className="text-center">
@@ -106,11 +119,8 @@ export default function LotteryWinnersPage() {
     );
   }
 
-  const totalWinners = winners?.length || 0;
-  const totalPrizes = winners?.reduce((sum, winner) => {
-    const prizeValue = parseInt(winner.prize.replace(/[^0-9]/g, '')) || 0;
-    return sum + prizeValue;
-  }, 0) || 0;
+  const totalPrizes = winners?.length || 0; // Tổng số giải thưởng từ trước đến giờ
+  const totalPosts = allPosts?.length || 0; // Tổng số posts từ danh sách posts
 
   // const recentWinners = winners?.filter(w => 
   //   new Date(w.drawnAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
@@ -121,6 +131,8 @@ export default function LotteryWinnersPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
+      <LotteryWinnersBanner />
+      
       {/* Header Section */}
       <div className="text-center mb-8 sm:mb-12">
         <div className="flex items-center justify-center mb-4">
@@ -154,133 +166,92 @@ export default function LotteryWinnersPage() {
       </div>
 
       {/* Statistics Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8 sm:mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 sm:mb-12">
         <Card className="text-center hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-center mb-2">
-              <Award className="h-8 w-8 text-yellow-500" />
+              <Award className="h-8 w-8 text-primary" />
             </div>
-            <div className="text-2xl font-bold text-foreground">{totalWinners}</div>
-            <p className="text-sm text-muted-foreground">總得獎人數</p>
+            <div className="text-2xl font-bold text-foreground">{totalPosts}</div>
+            <p className="text-sm text-primary font-medium mb-2">累積的夢想卡</p>
+            <p className="text-xs text-muted-foreground">每一張卡，都是一顆夢想的種子，慢慢在牆上發芽</p>
           </CardContent>
         </Card>
         
         <Card className="text-center hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-center mb-2">
-              <Gift className="h-8 w-8 text-green-500" />
+              <Gift className="h-8 w-8 text-yellow-500" />
             </div>
-            <div className="text-2xl font-bold text-foreground">${totalPrizes.toLocaleString()}</div>
-            <p className="text-sm text-muted-foreground">總獎金價值</p>
+            <div className="text-2xl font-bold text-foreground">{totalPrizes}</div>
+            <p className="text-sm text-yellow-600 font-medium mb-2">被幸運點亮</p>
+            <p className="text-xs text-muted-foreground">幸運只是開始，真正珍貴的是被看見的夢想</p>
           </CardContent>
         </Card>
         
         <Card className="text-center hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-center mb-2">
-              <Play className="h-8 w-8 text-blue-500" />
+              <Star className="h-8 w-8 text-green-500" />
             </div>
-            <div className="text-2xl font-bold text-foreground">{activeLotteries.length}</div>
-            <p className="text-sm text-muted-foreground">進行中的抽獎</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="text-center hover:shadow-lg transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-center mb-2">
-              <Clock className="h-8 w-8 text-orange-500" />
-            </div>
-            <div className="text-2xl font-bold text-foreground">{upcomingLotteries.length}</div>
-            <p className="text-sm text-muted-foreground">即將開始的抽獎</p>
+            <div className="text-2xl font-bold text-foreground">{totalPrizes}</div>
+            <p className="text-sm text-green-600 font-medium mb-2">送出的甜蜜</p>
+            <p className="text-xs text-muted-foreground">從夢想發芽，到化作甜蜜，送到幸運卡友手中</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* How to Participate Section */}
+      {/* Lottery Information Section */}
       <div className="mb-8 sm:mb-12">
         <Card className="max-w-4xl mx-auto">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-2">
               <Info className="h-8 w-8 text-blue-500 mr-2" />
-              <CardTitle className="text-xl sm:text-2xl">📝 如何參與抽獎</CardTitle>
+              <CardTitle className="text-xl sm:text-2xl">🎯 抽獎方式</CardTitle>
             </div>
             <CardDescription className="text-base">
-              要參與抽獎活動，您需要完成以下步驟：
+              在希望夢想牆，每一張夢想卡都會得到一組3位數的幸運編號，這些編號就像夢想的印記，靜靜等待被點亮的一刻！
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
+            <div className="text-center">
+              <p className="text-base text-muted-foreground">
+                每個月我們會公布 3 組幸運數字，對應到夢想卡編號，讓其中的夢想綻放光芒。
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                    1
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Calendar className="h-5 w-5 text-blue-600" />
+                    <h4 className="font-semibold text-blue-800">公布時間</h4>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">註冊帳戶</h4>
-                    <p className="text-sm text-muted-foreground">
-                      在系統上創建帳戶以便參與抽獎活動
+                  <div className="space-y-2 text-sm">
+                    <p className="text-muted-foreground">
+                      <span className="font-medium">單月 26 號：</span>依照台灣統一發票的「頭獎末三碼」公布幸運數字。
                     </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                    2
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">分享夢想貼文</h4>
-                    <p className="text-sm text-muted-foreground">
-                      通過在系統上發布貼文來分享您的夢想
+                    <p className="text-muted-foreground">
+                      <span className="font-medium">雙月最後一天：</span>隨機抽出三張發票，取其「末三碼」作為幸運數字。
                     </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
-                    3
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">與社群互動</h4>
-                    <p className="text-sm text-muted-foreground">
-                      點讚、分享和評論貼文以增加參與機會
+                    <p className="text-muted-foreground">
+                      每一次公布，都是一次「夢想被看見」的時刻。
                     </p>
                   </div>
                 </div>
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">
-                    4
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Gift className="h-5 w-5 text-green-600" />
+                    <h4 className="font-semibold text-green-800">中獎禮物</h4>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">自動參與</h4>
-                    <p className="text-sm text-muted-foreground">
-                      當有新抽獎時，您將自動被加入參與者名單
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">
-                    5
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">等待結果</h4>
-                    <p className="text-sm text-muted-foreground">
-                      得獎者將被隨機選擇並在此頁面公佈
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">
-                    6
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">領取獎品</h4>
-                    <p className="text-sm text-muted-foreground">
-                      如果中獎，您將被聯繫以領取獎品
+                  <div className="space-y-2 text-sm">
+                    <p className="text-muted-foreground">
+                      當幸運降臨，對應的夢想卡會成為被點亮的那一張，那位卡友將收到一份
+                      <span className="font-bold text-[#25a777]">希望綠豆湯</span>
+                      精選甜點禮盒。
                     </p>
                   </div>
                 </div>
@@ -294,6 +265,21 @@ export default function LotteryWinnersPage() {
                   開始分享夢想
                 </Button>
               </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Additional Information Section */}
+      <div className="mb-8 sm:mb-12">
+        <Card className="max-w-4xl mx-auto">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-base text-muted-foreground leading-relaxed">
+                每一份禮物，都是我們替卡友準備的甜蜜心意，<br />
+                也代表夢想正在慢慢發芽、化作真實的祝福。<br />
+                即使沒有被抽中，你的夢想也已經在這裡發芽，並被好好珍藏！
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -428,7 +414,7 @@ export default function LotteryWinnersPage() {
       )}
 
       {/* Winners List */}
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <h2 className="text-2xl font-bold mb-6 text-center">🏆 得獎者名單</h2>
         
         {!winners || winners.length === 0 ? (
@@ -483,7 +469,6 @@ export default function LotteryWinnersPage() {
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
-                  {/* Winner Information */}
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <Star className="h-4 w-4 text-green-600" />
@@ -501,7 +486,6 @@ export default function LotteryWinnersPage() {
                     </div>
                   </div>
 
-                  {/* Lottery Details */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                     <div className="flex items-center space-x-2">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -540,10 +524,10 @@ export default function LotteryWinnersPage() {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Footer Information */}
-      <div className="mt-12 text-center">
+      {/* <div className="mt-12 text-center">
         <Card className="max-w-2xl mx-auto">
           <CardContent className="pt-6">
             <h3 className="text-lg font-semibold mb-2">📋 更多資訊</h3>
@@ -555,7 +539,7 @@ export default function LotteryWinnersPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 } 

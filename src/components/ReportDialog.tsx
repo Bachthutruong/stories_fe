@@ -18,12 +18,12 @@ interface ReportDialogProps {
 }
 
 const REPORT_REASONS = [
-  { value: 'spam', label: 'Spam or misleading content' },
-  { value: 'inappropriate', label: 'Inappropriate or offensive content' },
-  { value: 'harassment', label: 'Harassment or bullying' },
-  { value: 'violence', label: 'Violence or threats' },
-  { value: 'copyright', label: 'Copyright violation' },
-  { value: 'other', label: 'Other' },
+  { value: 'spam', label: '垃圾訊息或誤導性內容' },
+  { value: 'inappropriate', label: '不當或冒犯性內容' },
+  { value: 'harassment', label: '騷擾或霸凌' },
+  { value: 'violence', label: '暴力或威脅' },
+  { value: 'copyright', label: '版權侵犯' },
+  { value: 'other', label: '其他' },
 ];
 
 export default function ReportDialog({ 
@@ -42,8 +42,8 @@ export default function ReportDialog({
   const handleSubmit = async () => {
     if (!reason) {
       toast({
-        title: 'Reason Required',
-        description: 'Please select a reason for reporting',
+        title: '需要選擇原因',
+        description: '請選擇舉報原因',
         variant: 'destructive'
       });
       return;
@@ -51,8 +51,8 @@ export default function ReportDialog({
 
     if (!user?.user) {
       toast({
-        title: 'Login Required',
-        description: 'Please login to submit a report',
+        title: '需要登入',
+        description: '請先登入才能提交舉報',
         variant: 'destructive'
       });
       return;
@@ -78,12 +78,12 @@ export default function ReportDialog({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to submit report');
+        throw new Error(error.message || '提交舉報失敗');
       }
 
       toast({
-        title: 'Report Submitted',
-        description: 'Thank you for your report. We will review it shortly.',
+        title: '舉報已提交',
+        description: '感謝您的舉報，我們會盡快審核。',
       });
 
       // Reset form
@@ -93,8 +93,8 @@ export default function ReportDialog({
     } catch (error) {
       console.error('Report submission error:', error);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to submit report',
+        title: '錯誤',
+        description: error instanceof Error ? error.message : '提交舉報失敗',
         variant: 'destructive'
       });
     } finally {
@@ -114,12 +114,12 @@ export default function ReportDialog({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Report {contentType === 'post' ? 'Post' : 'Comment'}</DialogTitle>
+          <DialogTitle>舉報{contentType === 'post' ? '貼文' : '評論'}</DialogTitle>
           <DialogDescription>
-            Help us keep the community safe by reporting inappropriate content.
+            透過舉報不當內容來幫助我們維護社群安全。
             {contentTitle && (
               <div className="mt-2 p-2 bg-muted rounded text-sm">
-                <strong>Content:</strong> {contentTitle}
+                <strong>內容：</strong> {contentTitle}
               </div>
             )}
           </DialogDescription>
@@ -127,10 +127,10 @@ export default function ReportDialog({
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="reason">Reason for reporting</Label>
+            <Label htmlFor="reason">舉報原因</Label>
             <Select value={reason} onValueChange={setReason}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a reason" />
+                <SelectValue placeholder="請選擇原因" />
               </SelectTrigger>
               <SelectContent>
                 {REPORT_REASONS.map((reasonOption) => (
@@ -143,10 +143,10 @@ export default function ReportDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Additional details (optional)</Label>
+            <Label htmlFor="description">其他詳情（選填）</Label>
             <Textarea
               id="description"
-              placeholder="Please provide any additional context..."
+              placeholder="請提供任何額外的說明..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -156,14 +156,14 @@ export default function ReportDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
-            Cancel
+            取消
           </Button>
           <Button 
             onClick={handleSubmit} 
             disabled={isSubmitting || !reason}
             className="bg-red-600 hover:bg-red-700"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Report'}
+            {isSubmitting ? '提交中...' : '提交舉報'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -122,7 +122,7 @@ const HomePageContent = () => {
     };
 
     const renderPostCard = (post: Post) => {
-        const luckyNumber = post.postId ? generatePostLuckyNumber(post.postId) : '000';
+        const luckyNumber = generatePostLuckyNumber(post);
         
         return (
             <Link key={post._id} to={`/posts/${post._id}`} className="block">
@@ -153,10 +153,6 @@ const HomePageContent = () => {
                                 />
                             </div>
                         )}
-                                    <div className="text-xs sm:text-sm text-muted-foreground">
-              <p>作者: {post.userId?.name || '匿名'}</p>
-              <p>電話: {post.userId?.phoneNumber || '未提供'}</p>
-            </div>
                     </CardContent>
                     
                     <CardFooter className="flex justify-between items-center p-3 sm:p-4">
@@ -208,11 +204,9 @@ const HomePageContent = () => {
         <div className="container mx-auto px-4 py-6 sm:py-8">
             <HomeBanner />
             
-            <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">歡迎來到希望夢想牆</h1>
-
             <section className="mb-8 sm:mb-12">
-                <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">故事的角落                </h2>
-                <h5 className="text-xl sm:text-2xl font-semibold mb-4 text-center">有故事的地方，夢想就不孤單</h5>
+                <h2 className="text-sm sm:text-2xl font-bold mb-4 text-center">故事的角落</h2>
+                <h5 className="text-sm sm:text-base mb-4 text-center">有故事的地方，夢想就不孤單</h5>
 
                 {isLoading ? (
                     renderSkeletonGrid()
@@ -268,9 +262,9 @@ export default function HomePage() {
         <Suspense fallback={
             <div className="container mx-auto px-4 py-6 sm:py-8">
                 <HomeBanner />
-                <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">歡迎來到希望夢想牆</h1>
                 <section className="mb-8 sm:mb-12">
-                    <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">讓我的夢想上牆                    </h2>
+                    <h2 className="text-sm sm:text-base mb-4 text-center">故事的角落</h2>
+                    <h5 className="text-sm sm:text-base mb-4 text-center">有故事的地方，夢想就不孤單</h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 justify-items-center auto-rows-fr">
                         {Array.from({ length: 6 }).map((_, index) => (
                             <PostCardSkeleton key={index} />

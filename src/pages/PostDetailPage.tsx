@@ -107,7 +107,7 @@ export default function PostDetailPage() {
     return <div className="container mx-auto px-4 py-8 text-center text-red-500">Error: {error?.message}</div>;
   }
 
-  const postId = post.postId || post._id;
+  // const postId = post.postId || post._id;
   const description = post.description || post.content || '';
 
   return (
@@ -119,11 +119,11 @@ export default function PostDetailPage() {
               <CardTitle className="text-lg sm:text-2xl text-foreground m-0 p-0 truncate">{post.title}</CardTitle>
             </div>
             <span className="ml-2 sm:ml-4 bg-blue-700 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-bold flex-shrink-0">
-              {postId ? generatePostLuckyNumber(postId) : '000'}
+              {generatePostLuckyNumber(post)}
             </span>
           </div>
           <CardDescription className="text-sm sm:text-base mt-1">
-            By {post.userId?.name || 'Anonymous'} - {new Date(post.createdAt).toLocaleDateString()}
+          來自於 {post.userId?.name || 'Anonymous'} - {new Date(post.createdAt).toLocaleDateString()}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
@@ -177,16 +177,16 @@ export default function PostDetailPage() {
               className="flex items-center space-x-1 text-muted-foreground hover:text-red-500 p-1 sm:p-2"
             >
               <Flag className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="text-xs sm:text-sm hidden sm:inline">Report</span>
+              <span className="text-xs sm:text-sm hidden sm:inline">回報問題，守護夢想！</span>
             </Button>
           </div>
 
           <div className="border-t pt-4 sm:pt-6">
-            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Comments</h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">陪夢想說說話            </h3>
             {user ? (
               <CommentForm postId={post._id} />
             ) : (
-              <p className="text-muted-foreground mb-3 sm:mb-4 text-sm sm:text-base">Please login to comment</p>
+              <p className="text-muted-foreground mb-3 sm:mb-4 text-sm sm:text-base">登入後，把你的心意送給這張夢想卡</p>
             )}
             <CommentList postId={post._id} />
           </div>

@@ -138,7 +138,7 @@ export default function PostsPage() {
   };
 
   const renderPostCard = (post: Post) => {
-            const luckyNumber = post.postId ? generatePostLuckyNumber(post.postId) : '000';
+            const luckyNumber = generatePostLuckyNumber(post);
     
     return (
       <Link key={post._id} to={`/posts/${post._id}`} className="block">
@@ -169,10 +169,6 @@ export default function PostsPage() {
                 />
               </div>
             )}
-            <div className="text-xs sm:text-sm text-muted-foreground">
-              <p>作者: {post.userId?.name || '匿名'}</p>
-              <p>電話: {post.userId?.phoneNumber || '未提供'}</p>
-            </div>
           </CardContent>
           
           <CardFooter className="flex justify-between items-center p-3 sm:p-4">

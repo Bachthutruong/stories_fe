@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
+import { ImageModal } from './ImageModal';
 
 interface ImageCarouselProps {
   images: { url: string; public_id: string }[];
@@ -10,6 +11,7 @@ interface ImageCarouselProps {
 
 export function ImageCarousel({ images, alt, className = '' }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Auto-advance carousel every 5 seconds
   useEffect(() => {
@@ -40,25 +42,35 @@ export function ImageCarousel({ images, alt, className = '' }: ImageCarouselProp
 
   if (images.length === 1) {
     return (
-      <div className={`relative ${className}`}>
-        <img
-          src={images[0].url}
-          alt={alt}
-          className="w-full max-h-64 sm:max-h-96 object-cover rounded-md"
+      <>
+        <div className={`relative ${className} cursor-pointer`} onClick={() => setIsModalOpen(true)}>
+          <img
+            src={images[0].url}
+            alt={alt}
+            className="w-full max-h-64 sm:max-h-96 object-cover rounded-md hover:opacity-90 transition-opacity"
+          />
+        </div>
+        <ImageModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          images={images}
+          currentIndex={0}
+          onIndexChange={setCurrentIndex}
         />
-      </div>
+      </>
     );
   }
 
   return (
-    <div className={`relative group ${className}`}>
-      {/* Main Image */}
-      <div className="relative overflow-hidden rounded-md">
-        <img
-          src={images[currentIndex].url}
-          alt={`${alt} - Image ${currentIndex + 1}`}
-          className="w-full max-h-64 sm:max-h-96 object-cover transition-transform duration-300 ease-in-out"
-        />
+    <>
+      <div className={`relative group ${className}`}>
+        {/* Main Image */}
+        <div className="relative overflow-hidden rounded-md cursor-pointer" onClick={() => setIsModalOpen(true)}>
+          <img
+            src={images[currentIndex].url}
+            alt={`${alt} - Image ${currentIndex + 1}`}
+            className="w-full max-h-64 sm:max-h-96 object-cover transition-transform duration-300 ease-in-out hover:opacity-90"
+          />
         
         {/* Navigation Buttons */}
         <Button
@@ -96,10 +108,18 @@ export function ImageCarousel({ images, alt, className = '' }: ImageCarouselProp
         ))}
       </div>
 
-      {/* Image Counter */}
-      <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-        {currentIndex + 1} / {images.length}
+        {/* Image Counter */}
+        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+          {currentIndex + 1} / {images.length}
+        </div>
       </div>
-    </div>
+      <ImageModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        images={images}
+        currentIndex={currentIndex}
+        onIndexChange={setCurrentIndex}
+      />
+    </>
   );
 }

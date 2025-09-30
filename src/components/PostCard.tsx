@@ -22,6 +22,7 @@ import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 import { useAuth } from './providers/AuthProvider';
 import ImageTest from './ImageTest';
+import { ImageCarousel } from './ImageCarousel';
 
 interface PostCardProps {
   post: Post;
@@ -85,11 +86,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, showInteractionsInitially = f
       <ImageTest images={post.images} />
       
       {post.images && post.images.length > 0 && (
-        <div className="relative w-full aspect-[16/10] bg-muted overflow-hidden">
-          <img 
-            src={post.images[0].url} 
-            alt={post.description.substring(0,50)} 
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        <div className="px-4">
+          <ImageCarousel 
+            images={post.images}
+            alt={post.description.substring(0,50)}
+            className="w-full"
           />
         </div>
       )}

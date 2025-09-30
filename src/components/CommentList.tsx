@@ -73,7 +73,7 @@ const CommentList: React.FC<CommentListProps> = ({ postId }) => {
   }
 
   if (!comments || comments.length === 0) {
-    return <p className="text-sm text-muted-foreground py-4">No comments yet. Be the first to comment!</p>;
+    return <p className="text-sm text-muted-foreground py-4">這張夢想卡，正在等待第一份祝福 </p>;
   }
 
   return (

@@ -117,22 +117,22 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, onCommentAdded }) => 
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 border-t mt-4">
-          <h3 className="text-lg font-semibold font-headline">Leave a Comment</h3>
+          <h3 className="text-lg font-semibold font-headline">寫下你的祝福或鼓勵</h3>
           <FormField
             control={form.control}
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="sr-only">Comment</FormLabel>
+                <FormLabel className="sr-only">留言</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Write your comment..." {...field} rows={3} />
+                  <Textarea placeholder="輕輕留下一句話，讓夢想不孤單…" {...field} rows={3} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Posting...' : 'Post Comment'}
+            {isSubmitting ? 'Posting...' : '送出祝福'}
           </Button>
         </form>
       </Form>
@@ -141,19 +141,19 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, onCommentAdded }) => 
       <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Post Comment</DialogTitle>
+            <DialogTitle>送出祝福</DialogTitle>
             <DialogDescription>
-              Please enter your name to post a comment
+              請輸入您的姓名以留言
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="user-name">Name</Label>
+              <Label htmlFor="user-name">姓名</Label>
               <Input
                 id="user-name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
-                placeholder="Enter your name"
+                placeholder="請輸入您的姓名"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleNameSubmit();
@@ -164,10 +164,10 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, onCommentAdded }) => 
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowNameDialog(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={handleNameSubmit}>
-              Post Comment
+              留言
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,10 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { Trophy, Calendar, Gift, Users, Star, Award, RefreshCw, Plus, Clock, Play, Info } from 'lucide-react';
+import { Trophy, Calendar, Gift, Users, Star, Award, Plus, Clock, Play, Info } from 'lucide-react';
 import { formatDate } from '../lib/utils';
-import { useToast } from '../hooks/use-toast';
+// import { useToast } from '../hooks/use-toast';
 import { Link } from 'react-router-dom';
 import LotteryWinnersBanner from '../components/LotteryWinnersBanner';
 
@@ -44,8 +44,8 @@ interface CurrentLottery {
 }
 
 export default function LotteryWinnersPage() {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  // const { toast } = useToast();
+  // const queryClient = useQueryClient();
 
   const { data: winners, isLoading: winnersLoading } = useQuery<LotteryWinner[]>({
     queryKey: ['lottery-winners'],
@@ -81,32 +81,32 @@ export default function LotteryWinnersPage() {
   });
 
 
-  const createTestDataMutation = useMutation({
-    mutationFn: async () => {
-      const res = await fetch('https://stories-be.onrender.com/api/home/lottery/test-data', {
-        method: 'POST',
-      });
-      if (!res.ok) {
-        throw new Error('Failed to create test data');
-      }
-      return res.json();
-    },
-    onSuccess: (data) => {
-      toast({
-        title: '成功！',
-        description: `已創建 ${data.count} 個抽獎範例`,
-      });
-      queryClient.invalidateQueries({ queryKey: ['lottery-winners'] });
-      queryClient.invalidateQueries({ queryKey: ['current-lotteries'] });
-    },
-    onError: (_error) => {
-      toast({
-        title: '錯誤',
-        description: '無法創建範例資料',
-        variant: 'destructive',
-      });
-    },
-  });
+  // const createTestDataMutation = useMutation({
+  //   mutationFn: async () => {
+  //     const res = await fetch('https://stories-be.onrender.com/api/home/lottery/test-data', {
+  //       method: 'POST',
+  //     });
+  //     if (!res.ok) {
+  //       throw new Error('Failed to create test data');
+  //     }
+  //     return res.json();
+  //   },
+  //   onSuccess: (data) => {
+  //     toast({
+  //       title: '成功！',
+  //       description: `已創建 ${data.count} 個抽獎範例`,
+  //     });
+  //     queryClient.invalidateQueries({ queryKey: ['lottery-winners'] });
+  //     queryClient.invalidateQueries({ queryKey: ['current-lotteries'] });
+  //   },
+  //   onError: (_error) => {
+  //     toast({
+  //       title: '錯誤',
+  //       description: '無法創建範例資料',
+  //       variant: 'destructive',
+  //     });
+  //   },
+  // });
 
   if (winnersLoading || currentLotteriesLoading || allPostsLoading) {
     return (
@@ -144,7 +144,7 @@ export default function LotteryWinnersPage() {
         </p>
         
         {/* Test Data Button */}
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <Button 
             onClick={() => createTestDataMutation.mutate()}
             disabled={createTestDataMutation.isPending}
@@ -162,7 +162,7 @@ export default function LotteryWinnersPage() {
               </>
             )}
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Statistics Section */}

@@ -27,7 +27,7 @@ export const SensitiveTextDisplay: React.FC<SensitiveTextDisplayProps> = ({
   return (
     <div className="relative">
       <div 
-        className={className}
+        className={`${className} whitespace-pre-wrap`}
         dangerouslySetInnerHTML={{ __html: highlightedText }}
       />
       

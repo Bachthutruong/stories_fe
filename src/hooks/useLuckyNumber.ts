@@ -28,11 +28,31 @@ export const useLuckyNumber = () => {
   return formatNumber(luckyNumber);
 };
 
-// Generate a lucky number for each post based on post ID
-export const generatePostLuckyNumber = (postId: string): string => {
-  // Lấy 3 ký tự cuối cùng của postId, chuyển sang số, lấy mod 1000
+// Get lucky number from backend API
+export const getPostLuckyNumber = async (postId: string): Promise<string> => {
+  try {
+    const response = await fetch(`https://stories-be.onrender.com/api/posts/${postId}/lucky-number`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch lucky number');
+    }
+    const data = await response.json();
+    return data.luckyNumber || '000';
+  } catch (error) {
+    console.error('Error fetching lucky number:', error);
+    return '000'; // Fallback
+  }
+};
+
+// Legacy function - now just returns the post's lucky number if available
+export const generatePostLuckyNumber = (post: any): string => {
+  // If post has luckyNumber from backend, use it
+  if (post?.luckyNumber) {
+    return post.luckyNumber;
+  }
+  
+  // Fallback to old logic for backward compatibility
+  const postId = post?.postId || post?._id || '';
   let last3 = postId.slice(-3);
-  // Nếu không phải số, chuyển ký tự sang mã charCode rồi cộng lại
   let num = 0;
   if (/^\d{3}$/.test(last3)) {
     num = parseInt(last3, 10);

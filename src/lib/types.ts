@@ -25,6 +25,7 @@ export interface Post {
   commentsCount: number;
   isFeatured: boolean;
   isHidden: boolean;
+  luckyNumber: string;
   userId: {
     _id: string;
     name: string;

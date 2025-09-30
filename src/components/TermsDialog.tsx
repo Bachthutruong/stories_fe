@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
@@ -69,11 +69,11 @@ const TermsDialog: React.FC<TermsDialogProps> = ({ isOpen, onOpenChange, onAgree
       <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-lg md:text-xl">
-            {settings?.termsAndConditions?.title || 'Terms and Conditions'}
+            {settings?.termsAndConditions?.title || '使用條款與隱私政策'}
           </DialogTitle>
-          <DialogDescription className="text-sm">
+          {/* <DialogDescription className="text-sm">
             Before submitting your post, please read and agree to our terms and conditions.
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         
         {/* Scrollable content area */}
@@ -108,7 +108,7 @@ const TermsDialog: React.FC<TermsDialogProps> = ({ isOpen, onOpenChange, onAgree
               onClick={() => handleOpenChange(false)}
               className="flex-1 h-12 text-base font-medium"
             >
-              Cancel
+              取消
             </Button>
             <Button 
               onClick={handleAgree} 
@@ -119,7 +119,7 @@ const TermsDialog: React.FC<TermsDialogProps> = ({ isOpen, onOpenChange, onAgree
                   : 'bg-muted text-muted-foreground cursor-not-allowed'
               }`}
             >
-              {isConfirmed ? 'I Agree' : 'Please confirm terms'}
+              {isConfirmed ? '我同意' : '接受並參與夢想牆'}
             </Button>
           </div>
         </div>
